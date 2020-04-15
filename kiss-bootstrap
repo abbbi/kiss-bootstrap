@@ -9,40 +9,13 @@ die() {
     exit 1
 }
 
-CHROOT_DIR=./root
-TARGET_DIR=./target
-KERNEL_DIR=./build/
-CHROOT_CMD=./kiss-chroot
-
-NBD_DEV=/dev/nbd0
-
-# qcow image name and size
-QCOW_FILE="kiss.qcow2"
-QCOW_FILE_COMPRESSED="${QCOW_FILE}.compressed"
-QCOW_SIZE="10G"
-
-# username and password
-USER="kiss"
-PASSWORD="kiss"
-
-# packages to be installed in target chroot
-BASE_PACKAGES="e2fsprogs eudev dhcpcd"
-PACKAGES="grub baseinit openssh"
-
-# services to be enabled during bootup
-SERVICES="dhcpcd sshd"
-
-# KISS and kernel packages
-KISS_ROOT=https://dl.getkiss.org/kiss-chroot.tar.xz
-KISS_CHROOT=https://dl.getkiss.org/kiss-chroot
-KERNEL_VERSION=linux-5.3.2
-KERNEL_PACKAGE=https://cdn.kernel.org/pub/linux/kernel/v5.x/${KERNEL_VERSION}.tar.xz
+. ./build.cfg
 
 download() {
     log Downloading kernel, filesystem and chroot components; {
-        wget -q -nc ${KISS_ROOT}
-        wget -q -nc ${KISS_CHROOT}
-        wget -q -nc ${KERNEL_PACKAGE}
+        wget -q -nc ${KISS_ROOT} || exit 1
+        wget -q -nc ${KISS_CHROOT} || exit 1
+        wget -q -nc ${KERNEL_PACKAGE} || exit 1
         chmod +x ${CHROOT_CMD}
     }
 }
