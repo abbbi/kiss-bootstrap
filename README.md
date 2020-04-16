@@ -1,5 +1,5 @@
 # kiss-bootstrap
-Bootstrap kiss linux into qemu boot image
+Bootstrap kiss linux into qemu boot image, needs some more work here and there but works :)
 
 ```
 kiss-bootstrap --build=[all|download|prepare|chroot|qemu|cleanup]
