@@ -27,6 +27,8 @@ cleanup() {
 		rm -rf ${CHROOT_DIR}
 		rm -rf ${TARGET_DIR}
 		rm -rf ${KERNEL_DIR}
+		rm -f ${VAGRANT_IMAGE}
+		rm -f box.img
         exit 0
     }
 }
@@ -79,6 +81,10 @@ setup_kiss_chroot() {
             chroot_exec "ln -s /etc/sv/${SERVICE} /var/service/${SERVICE}" ${CHROOT_DIR}
         done
     }
+
+    log Execute vagrant setup script; {
+        cat ${VAGRANT_SETUP_SCRIPT} | ${CHROOT_CMD} ${CHROOT_DIR}
+    }
 }
 
 create_qemu_image() {
@@ -124,7 +130,6 @@ create_qemu_image() {
 
 create_vagrant_image() {
     log Creating vagrant image; {
-        # todo: execute vagrant-setup within chroot
         rm -f ${VAGRANT_IMAGE}
         rm -f box.img
         cp ${QCOW_FILE} box.img
@@ -133,14 +138,16 @@ create_vagrant_image() {
 }
 
 usage() {
-    echo "$(basename "$0") --build=[all|download|prepare|chroot|qemu|cleanup|vagrant]"
-    echo "  all: complete build of chroot/qemu image"
+    echo "$(basename "$0") --build=[all|download|prepare|chroot|qemu|vagrant]"
+    echo "  all: complete build of chroot/qemu/vagrant image"
     echo "  download: download needed components"
     echo "  prepare: extract archives, create folders"
     echo "  chroot: build kiss environment in chroot"
     echo "  qemu: turn chroot into bootable qemu image"
-    echo "  cleanup: clean everything up"
     echo "  vagrant: build vagrant box image"
+    echo ""
+    echo "$(basename "$0") --cleanup"
+    echo "  cleanup: clean everything up"
 }
 
 compress() {
@@ -190,6 +197,7 @@ main() {
             setup_kiss_chroot
             create_qemu_image
             compress
+            create_vagrant_image
         ;;
         prepare)
             prepare
@@ -210,8 +218,6 @@ main() {
 			create_vagrant_image
 		;;
 	esac
-
-    log "created ${QCOW_FILE}"
 }
 
 main "$*"
