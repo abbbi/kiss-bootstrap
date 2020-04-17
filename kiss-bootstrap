@@ -89,6 +89,7 @@ setup_kiss_chroot() {
 
 create_qemu_image() {
     log Create qemu image;  {
+        rm -f ${QCOW_FILE}
         qemu-img create -f qcow2 ${QCOW_FILE} ${QCOW_SIZE}
     }
 
@@ -98,23 +99,28 @@ create_qemu_image() {
 
     log Create partitions and format NBD Device; {
         parted ${NBD_DEV} --script mklabel msdos
-        parted ${NBD_DEV} -a optimal  --script mkpart primary 1 9.5G
-        mkfs.ext4 ${NBD_DEV}p1
+        parted ${NBD_DEV} -a optimal  --script mkpart primary linux-swap 1M ${SWAPFS_SIZE}
+        parted ${NBD_DEV} -a optimal  --script mkpart primary ext4 ${SWAPFS_SIZE} 100%
+        mkswap ${NBD_DEV}p1
+        mkfs.ext4 ${NBD_DEV}p2
     }
 
     log Mount NBD device to target directory; {
-        mount ${NBD_DEV}p1 ${TARGET_DIR}
+        mount ${NBD_DEV}p2 ${TARGET_DIR}
     }
 
     log Copy files from chroot to NBD device; {
-        rsync -a ${CHROOT_DIR}/* ${TARGET_DIR}/
-        rm -rf ${TARGET_DIR}/root/.cache/
+        rsync -a --exclude "root/.cache" ${CHROOT_DIR}/* ${TARGET_DIR}/
     }
 
     log Setup bootloader; {
         chroot_exec "grub-install --target=i386-pc ${NBD_DEV}"  ${TARGET_DIR}
         chroot_exec "grub-mkconfig -o /boot/grub/grub.cfg" ${TARGET_DIR}
-        sed -i 's/nbd0p1/sda1/g' ${TARGET_DIR}/boot/grub/grub.cfg
+        sed -i 's/nbd0p2/sda2/g' ${TARGET_DIR}/boot/grub/grub.cfg
+    }
+
+    log Setup swap space; {
+        echo "/dev/sda1     none    swap    sw 0 02" >> ${TARGET_DIR}/etc/fstab
     }
 
     log Setup username and password; {
