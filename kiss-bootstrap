@@ -68,7 +68,7 @@ setup_kiss_chroot() {
 
     log Install kernel; {
         make -C ${KERNEL_DIR}/${KERNEL_VERSION} modules_install INSTALL_PATH=../../${CHROOT_DIR} 1>/dev/null
-        make -C ${KERNEL_DIR}/${KERNEL_VERSION} headers_install INSTALL_PATH=../../${CHROOT_DIR} 1>/dev/null
+        make -C ${KERNEL_DIR}/${KERNEL_VERSION} headers_install INSTALL_HDR_PATH=../../${CHROOT_DIR}/usr 1>/dev/null
         make -C ${KERNEL_DIR}/${KERNEL_VERSION} install INSTALL_PATH=../../${CHROOT_DIR}/boot/ 1>/dev/null
     }
 
