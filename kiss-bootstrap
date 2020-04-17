@@ -121,7 +121,7 @@ create_qemu_image() {
     }
 
     log Setup swap space; {
-        echo "/dev/sda1     none    swap    sw 0 02" >> ${TARGET_DIR}/etc/fstab
+        echo "/dev/sda1     none    swap    sw 0 0" >> ${TARGET_DIR}/etc/fstab
     }
 
     log Setup username and password; {
@@ -155,12 +155,6 @@ usage() {
     echo ""
     echo "$(basename "$0") --cleanup"
     echo "  cleanup: clean everything up"
-}
-
-compress() {
-    log "Compressing image [${QCOW_FILE}] to [${QCOW_FILE_COMPRESSED}]"; {
-        qemu-img convert -O qcow2 -c ${QCOW_FILE} ${QCOW_FILE_COMPRESSED}
-    }
 }
 
 main() {
@@ -203,7 +197,6 @@ main() {
             prepare
             setup_kiss_chroot
             create_qemu_image
-            compress
             create_vagrant_image
         ;;
         prepare)
@@ -211,9 +204,6 @@ main() {
         ;;
         download)
             download
-        ;;
-        compress)
-            compress
         ;;
 		chroot)
 			setup_kiss_chroot
