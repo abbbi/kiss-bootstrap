@@ -33,6 +33,13 @@ cleanup() {
     }
 }
 
+compress() {
+    log "Compressing image [${QCOW_FILE}] to [${QCOW_FILE_COMPRESSED}]"; {
+        rm -f ${QCOW_FILE_COMPRESSED}
+        qemu-img convert -O qcow2 -c ${QCOW_FILE} ${QCOW_FILE_COMPRESSED}
+    }
+}
+
 prepare() {
     log Prepare directoriess; {
         mkdir ${TARGET_DIR} 2> /dev/null || true
@@ -61,6 +68,7 @@ setup_kiss_chroot() {
 
     log Install kernel; {
         make -C ${KERNEL_DIR}/${KERNEL_VERSION} modules_install INSTALL_PATH=../../${CHROOT_DIR} 1>/dev/null
+        make -C ${KERNEL_DIR}/${KERNEL_VERSION} headers_install INSTALL_PATH=../../${CHROOT_DIR} 1>/dev/null
         make -C ${KERNEL_DIR}/${KERNEL_VERSION} install INSTALL_PATH=../../${CHROOT_DIR}/boot/ 1>/dev/null
     }
 
@@ -139,7 +147,7 @@ create_vagrant_image() {
     log Creating vagrant image; {
         rm -f ${VAGRANT_IMAGE}
         rm -f box.img
-        cp ${QCOW_FILE} box.img
+        cp ${QCOW_FILE_COMPRESSED} box.img
         tar cvzf ${VAGRANT_IMAGE} ${VAGRANT_METADATA} ${VAGRANT_FILE} ./box.img
     }
 }
@@ -197,6 +205,7 @@ main() {
             prepare
             setup_kiss_chroot
             create_qemu_image
+            compress
             create_vagrant_image
         ;;
         prepare)
@@ -212,6 +221,7 @@ main() {
 			create_qemu_image
 		;;
 		vagrant)
+			compress
 			create_vagrant_image
 		;;
 	esac
