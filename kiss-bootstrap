@@ -110,6 +110,7 @@ create_qemu_image() {
     }
 
     log Copy files from chroot to NBD device; {
+        find ${CHROOT_DIR}/boot -name '*.old' -exec rm -f \{\} \;
         rsync -a --exclude "root/.cache" ${CHROOT_DIR}/* ${TARGET_DIR}/
     }
 

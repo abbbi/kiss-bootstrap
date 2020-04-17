@@ -4,7 +4,7 @@
 Vagrant.configure(2) do |config|
   config.vm.boot_timeout = 1800
   config.vm.synced_folder ".", "/vagrant", disabled: true
-  config.vm.box_check_update = false
+  config.vm.box_check_update = true
   config.vm.boot_timeout = 1800
   config.vm.boot_timeout = 1800
   config.ssh.shell = 'ash'
