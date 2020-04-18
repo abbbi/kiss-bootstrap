@@ -9,7 +9,6 @@ kiss-bootstrap --build=[all|download|prepare|chroot|qemu]
   chroot: build kiss environment in chroot
   qemu: turn chroot into bootable qemu image
 
-
 ./kiss-bootstrap --cleanup
   cleanup
 ```
