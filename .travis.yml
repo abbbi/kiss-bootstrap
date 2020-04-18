@@ -18,4 +18,5 @@ install:
 script:
 - cd travis
 - sudo vagrant up --provider=libvirt
-- sudo vagrant ssh -c "echo 'hello world!'"
+- sudo vagrant ssh -c "git clone https://github.com/kisslinux/community/"
+- sudo vagrant ssh -c "export KISS_PATH=~/community/community; kiss b pv"
