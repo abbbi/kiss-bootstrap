@@ -13,3 +13,5 @@ kiss-bootstrap --build=[all|download|prepare|chroot|qemu]
 ./kiss-bootstrap --cleanup
   cleanup
 ```
+
+Run travis test
