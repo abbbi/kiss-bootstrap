@@ -17,6 +17,9 @@ install:
 
 script:
 - cd travis
+# spin up kiss linux vagrant box
 - sudo vagrant up --provider=libvirt
+# clone community repository
 - sudo vagrant ssh -c "git clone https://github.com/kisslinux/community/"
+# test build pv package
 - sudo vagrant ssh -c "export KISS_PATH=~/community/community; kiss b pv"
