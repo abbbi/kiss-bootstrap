@@ -14,8 +14,8 @@ install:
 script:
 - travis_wait 30 sudo ./kiss-bootstrap --build=all
 - sudo vagrant box add --name kissbuild ./kiss-libvirt.box
-- mkdir tmp
-- cd tmp
-- vagrant init kissbuild
+- sudo mkdir tmp
+- sudo cd tmp
+- sudo vagrant init kissbuild
 - sudo vagrant up --provider=libvirt
 - sudo vagrant ssh -c "cat /etc/os-release"
