@@ -3,7 +3,7 @@ language: python
 
 install:
 # Install libvrt & KVM (see https://github.com/alvistack/ansible-role-virtualbox/blob/master/.travis.yml)
-- sudo apt-get update && sudo apt-get install -y bridge-utils dnsmasq-base ebtables libvirt-bin libvirt-dev qemu-kvm qemu-utils ruby-dev
+- sudo apt-get update && sudo apt-get install -y bridge-utils dnsmasq-base ebtables libvirt-bin libvirt-dev qemu-kvm qemu-utils ruby-dev ash
 
 # Download Vagrant & Install Vagrant package
 - sudo wget -nv https://releases.hashicorp.com/vagrant/2.2.7/vagrant_2.2.7_x86_64.deb
@@ -16,8 +16,6 @@ install:
 - sudo vagrant plugin install vagrant-libvirt
 
 script:
-- find .
-- cd abbbi/kiss-bootstrap
 - sudo ./kiss-bootstrap --build=all
 - sudo vagrant box add --name kissbuild ./kiss-libvirt.box
 - mkdir tmp
