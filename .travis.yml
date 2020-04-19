@@ -16,8 +16,7 @@ install:
 - sudo vagrant plugin install vagrant-libvirt
 
 script:
-- cd travis
-# spin up kiss linux vagrant box
+- cd abbbi/kiss-bootstrap
 - sudo ./kiss-bootstrap --build=all
 - sudo vagrant box add --name kissbuild ./kiss-libvirt.box
 - mkdir tmp
