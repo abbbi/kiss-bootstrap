@@ -1,5 +1,7 @@
+[![Build Status](https://travis-ci.org/abbbi/kiss-bootstrap.svg?branch=master)](https://travis-ci.org/abbbi/kiss-bootstrap)
+
 # kiss-bootstrap
-Bootstrap kiss linux into qemu boot image, needs some more work here and there but works :)
+Bootstrap kiss linux into qemu boot and vagrant image
 
 ```
 kiss-bootstrap --build=[all|download|prepare|chroot|qemu]
