@@ -169,7 +169,10 @@ main() {
     [ "$(id -u)" = 0 ] || die Script needs to be run as root
     command -v qemu-nbd >/dev/null || die Needs qemu utils installed
     command -v wget >/dev/null || die Needs wget installed
-    modprobe nbd || die Needs NBD module
+    command -v rsync >/dev/null || die Needs rsync installed
+    command -v sed >/dev/null || die Needs sed installed
+    command -v find >/dev/null || die Needs find installed
+    modprobe nbd || die Needs a working NBD module
 
 	opts=$(getopt \
 	    --longoptions "build:,help,cleanup" \
