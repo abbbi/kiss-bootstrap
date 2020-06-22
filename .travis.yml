@@ -13,7 +13,7 @@ install:
 
 script:
 - travis_wait 30 sudo ./kiss-bootstrap --build=all
-- sudo vagrant box add --name kissbuild ./kiss-libvirt-1.10.0.box
+- sudo vagrant box add --name kissbuild ./kiss-libvirt-1.11.0.box
 - mkdir tmp
 - cd tmp
 - sudo vagrant init kissbuild
