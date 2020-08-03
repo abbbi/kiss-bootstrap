@@ -13,9 +13,9 @@ die() {
 
 download() {
     log Downloading kernel, filesystem and chroot components; {
-        wget -q -nc ${KISS_ROOT} || exit 1
-        wget -q -nc ${KISS_CHROOT} || exit 1
-        wget -q -nc ${KERNEL_PACKAGE} || exit 1
+        wget -nc ${KISS_ROOT} || exit 1
+        wget -nc ${KISS_CHROOT} || exit 1
+        wget -nc ${KERNEL_PACKAGE} || exit 1
         chmod +x ${CHROOT_CMD}
     }
 }
@@ -27,6 +27,7 @@ cleanup() {
 		rm -rf ${CHROOT_DIR}
 		rm -rf ${TARGET_DIR}
 		rm -rf ${KERNEL_DIR}
+		rm -f kiss-chroot*.tar.xz
 		rm -f ${VAGRANT_IMAGE}
 		rm -f box.img
         exit 0
@@ -58,7 +59,7 @@ chroot_exec() {
 
 setup_kiss_chroot() {
     log Extract root filesystem; {
-        tar -xf kiss-chroot.tar.xz -C ${CHROOT_DIR} --strip-components 1
+        tar -xf kiss-chroot-${KISS_VERSION}.tar.xz -C ${CHROOT_DIR} --strip-components 1
     }
 
     log Build kernel; {
