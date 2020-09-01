@@ -76,7 +76,7 @@ setup_kiss_chroot() {
     log Clone repo [$BASE_REPO]; {
         chroot_exec "rm -rf /var/db/kiss/repo/" ${CHROOT_DIR}
         chroot_exec "git clone https://github.com/kisslinux/repo /var/db/kiss/repo/" ${CHROOT_DIR}
-        chroot_exec "echo 'export KISS_PATH=/var/db/kiss/repo/core:/var/db/kiss/repo/extra' > /etc/profile" ${CHROOT_DIR}
+        chroot_exec "echo 'export KISS_PATH=/var/db/kiss/repo/core:/var/db/kiss/repo/extra' >> /etc/profile" ${CHROOT_DIR}
     }
 
     log Building base packages; {
