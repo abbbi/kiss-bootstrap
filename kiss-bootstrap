@@ -14,9 +14,7 @@ die() {
 download() {
     log Downloading kernel, filesystem and chroot components; {
         wget -nc ${KISS_ROOT} || exit 1
-        wget -nc ${KISS_CHROOT} || exit 1
         wget -nc ${KERNEL_PACKAGE} || exit 1
-        chmod +x ${CHROOT_CMD}
     }
 }
 
@@ -59,7 +57,9 @@ chroot_exec() {
 
 setup_kiss_chroot() {
     log Extract root filesystem; {
-        tar -xf kiss-chroot-${KISS_VERSION}.tar.xz -C ${CHROOT_DIR} --strip-components 1
+        cd ${CHROOT_DIR}
+        tar xf ../kiss-chroot-${KISS_VERSION}.tar.xz
+        cd -
     }
 
     log Build kernel; {
@@ -71,6 +71,12 @@ setup_kiss_chroot() {
         make -C ${KERNEL_DIR}/${KERNEL_VERSION} modules_install INSTALL_PATH=../../${CHROOT_DIR} 1>/dev/null
         make -C ${KERNEL_DIR}/${KERNEL_VERSION} headers_install INSTALL_HDR_PATH=../../${CHROOT_DIR}/usr 1>/dev/null
         make -C ${KERNEL_DIR}/${KERNEL_VERSION} install INSTALL_PATH=../../${CHROOT_DIR}/boot/ 1>/dev/null
+    }
+
+    log Clone repo [$BASE_REPO]; {
+        chroot_exec "rm -rf /var/db/kiss/repo/" ${CHROOT_DIR}
+        chroot_exec "git clone https://github.com/kisslinux/repo /var/db/kiss/repo/" ${CHROOT_DIR}
+        chroot_exec "echo 'export KISS_PATH=/var/db/kiss/repo/core:/var/db/kiss/repo/extra' > /etc/profile" ${CHROOT_DIR}
     }
 
     log Building base packages; {
